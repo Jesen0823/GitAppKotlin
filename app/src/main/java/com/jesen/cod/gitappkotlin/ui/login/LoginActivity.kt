@@ -8,6 +8,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -17,6 +18,7 @@ import android.widget.Toast
 
 import com.jesen.cod.gitappkotlin.R
 import com.jesen.cod.gitappkotlin.Settings
+import com.jesen.cod.mvp.impl.MainFragment
 
 class LoginActivity : AppCompatActivity() {
 
@@ -34,6 +36,11 @@ class LoginActivity : AppCompatActivity() {
 
         username.setText(Settings.email)
         password.setText(Settings.password)
+
+        /*val mainFragment = MainFragment()
+        Log.i("mvp", mainFragment.toString())
+        Log.i("mvp", mainFragment.presenter.toString())
+        Log.i("mvp", mainFragment.presenter.view.toString())*/
 
 
         loginViewModel = ViewModelProviders.of(this, LoginViewModelFactory())

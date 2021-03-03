@@ -9,7 +9,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSuperclassOf
 
-class Propertiesdelegate(private val path: String) {
+class PropertiesDelegate(private val path: String) {
 
     private lateinit var url: URL
 
@@ -43,8 +43,7 @@ class Propertiesdelegate(private val path: String) {
             Boolean::class == classOfT -> value.toString().toBoolean()
             Number::class.isSuperclassOf(classOfT) -> {
                 classOfT.javaObjectType.getDeclaredMethod(
-                    "parse${classOfT.simpleName}"
-                    , String::class.java
+                    "parse${classOfT.simpleName}", String::class.java
                 ).invoke(null, value)
             }
             String::class == classOfT -> value
@@ -62,5 +61,5 @@ class Propertiesdelegate(private val path: String) {
 }
 
 abstract class AbsProperties(path: String) {
-    protected val prop = Propertiesdelegate(path)
+    protected val prop = PropertiesDelegate(path)
 }

@@ -1,3 +1,4 @@
 rootProject.name='GitAppKotlin'
 include ':app'
 include ':common'
+include ':mvp'
