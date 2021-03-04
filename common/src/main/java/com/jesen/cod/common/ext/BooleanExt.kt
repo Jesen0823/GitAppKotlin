@@ -1,4 +1,4 @@
-package com.jesen.cod.common
+package com.jesen.cod.common.ext
 
 sealed class BooleanExt<out T>
 
@@ -16,7 +16,14 @@ inline fun <T>Boolean.yes(block: () -> T) =
 
     }
 
-fun <T>BooleanExt<T>.otherwise(block: () -> T):T =
+inline fun <T> Boolean.no(block: () -> T) = when {
+    this -> Otherwise
+    else -> {
+        WithData(block())
+    }
+}
+
+fun <T> BooleanExt<T>.otherwise(block: () -> T):T =
     when(this){
         is Otherwise -> block()
         is WithData<T> -> this.data

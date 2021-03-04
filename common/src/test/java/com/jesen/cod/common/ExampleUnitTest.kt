@@ -1,6 +1,7 @@
 package com.jesen.cod.common
 
-import org.junit.Assert
+import com.jesen.cod.common.ext.otherwise
+import com.jesen.cod.common.ext.yes
 import org.junit.Test
 
 import org.junit.Assert.*

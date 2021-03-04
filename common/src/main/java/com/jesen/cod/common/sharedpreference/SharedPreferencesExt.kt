@@ -1,4 +1,4 @@
-package com.jesen.cod.common
+package com.jesen.cod.common.sharedpreference
 
 import android.content.Context
 import java.lang.IllegalArgumentException
