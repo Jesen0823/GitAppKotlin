@@ -1,23 +1,93 @@
 package com.jesen.cod.gitappkotlin.view
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import com.jesen.cod.common.ext.otherwise
+import com.jesen.cod.common.ext.yes
 
 import com.jesen.cod.gitappkotlin.R
 import com.jesen.cod.gitappkotlin.presenter.LoginPresenter
 import com.jesen.cod.gitappkotlin.ui.login.LoginViewModel
+import com.jesen.cod.gitappkotlin.utils.hideSoftInput
 import com.jesen.cod.mvp.impl.BaseActivity
+import org.jetbrains.anko.toast
 
 class LoginActivity : BaseActivity<LoginPresenter>() {
 
-    private lateinit var loginViewModel: LoginViewModel
+    private val signInBoolean by lazy { findViewById<Button>(R.id.login) }
+    private val userName by lazy { findViewById<EditText>(R.id.username) }
+    private val password by lazy { findViewById<EditText>(R.id.password) }
+    private val loginProgress by lazy { findViewById<ProgressBar>(R.id.loading) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_login)
+
+        signInBoolean.setOnClickListener {
+            presenter.checkUserName(userName.text.toString())
+                .yes {
+                    presenter.checkPasswd(password.text.toString())
+                        .yes {
+                            hideSoftInput()
+                            presenter.doLogin(userName.text.toString(), password.text.toString())
+                        }
+                        .otherwise {
+                            showTips(password, R.string.passwd_invialid.toString())
+                        }
+                }
+                .otherwise {
+                    showTips(userName, R.string.username_invialid.toString())
+                }
+        }
 
     }
 
+    private fun showTips(view: EditText, message: String) {
+        view.requestFocus()
+        view.error = message
+    }
+
+    fun onLoginStart() {
+
+    }
+
+    fun onLoginError(e: Throwable) {
+        e.printStackTrace()
+        toast("登录失败")
+    }
+
+    fun onLoginSuccess() {
+        toast("登录成功")
+    }
+
+    fun onDataInit(name: String, passwd: String) {
+        userName.setText(name)
+        password.setText(passwd)
+    }
+
+    private fun showProgress(show: Boolean) {
+        val showAnimTime = resources.getInteger(android.R.integer.config_longAnimTime)
+
+        /*loginForm.animate().setDuration(shortAnimTime.toLong()).alpha(
+            (if (show) 0 else 1).toFloat()).setListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                loginForm.visibility = if (show) View.GONE else View.VISIBLE
+            }
+        })*/
+
+        loginProgress.animate().setDuration(showAnimTime.toLong())
+            .alpha((if (show) 1 else 0).toFloat())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    loginProgress.visibility = if (show) View.VISIBLE else View.INVISIBLE
+                }
+            })
+    }
 
 }

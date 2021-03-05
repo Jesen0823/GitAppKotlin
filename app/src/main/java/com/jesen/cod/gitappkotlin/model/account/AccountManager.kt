@@ -30,6 +30,7 @@ object AccountManager {
     var passwd by pref("")
     var token by pref("")
 
+    // 保存用户信息
     private var userJson by pref("")
 
     var currentUser: User? = null
@@ -64,33 +65,7 @@ object AccountManager {
 
     fun isLoggedIn(): Boolean = token.isNotEmpty()
 
-    fun login1() {
-        AuthService.createAuthorization(AuthorizationReq())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .doOnNext {
-                if (it.token.isEmpty()) throw AccountException(it)
-            }.retryWhen {
-                it.flatMap {
-                    if (it is AccountException) {
-                        AuthService.deleteAuthorization(it.authorizationRsp.id)
-                    } else {
-                        Observable.error(it)
-                    }
-                }
-            }
-            .flatMap {
-                token = it.token
-                authId = it.id
-                UserService.getAuthenticatedUser()
-            }
-            .map {
-                currentUser = it
-                notifyLogin(it)
-            }
-    }
-
-    fun login() {
+    fun login1() =
         AuthService.createAuthorization(AuthorizationReq())
             .doOnNext {
                 if (it.token.isEmpty()) throw AccountException(it)
@@ -112,25 +87,35 @@ object AccountManager {
                 currentUser = it
                 notifyLogin(it)
             }
-    }
-
-    fun logout1() {
-        AuthService.deleteAuthorization(authId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
+
+
+    fun login() =
+        AuthService.createAuthorization(AuthorizationReq())
             .doOnNext {
-                if (it.isSuccessful) {
-                    authId = -1
-                    token = ""
-                    currentUser = null
-                    notifyLogout()
-                } else {
-                    throw HttpException(it)
+                if (it.token.isEmpty()) throw AccountException(it)
+            }.retryWhen {
+                it.flatMap {
+                    if (it is AccountException) {
+                        AuthService.deleteAuthorization(it.authorizationRsp.id)
+                    } else {
+                        Observable.error(it)
+                    }
                 }
             }
-    }
+            .flatMap {
+                token = it.token
+                authId = it.id
+                UserService.getAuthenticatedUser()
+            }
+            .map {
+                currentUser = it
+                notifyLogin(it)
+            }
 
-    fun logout() {
+
+    fun logout1() =
         AuthService.deleteAuthorization(authId)
             .doOnNext {
                 if (it.isSuccessful) {
@@ -142,7 +127,22 @@ object AccountManager {
                     throw HttpException(it)
                 }
             }
-    }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+
+
+    fun logout() =
+        AuthService.deleteAuthorization(authId)
+            .doOnNext {
+                if (it.isSuccessful) {
+                    authId = -1
+                    token = ""
+                    currentUser = null
+                    notifyLogout()
+                } else {
+                    throw HttpException(it)
+                }
+            }
 
 
 }
