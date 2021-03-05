@@ -2,6 +2,8 @@ package com.jesen.cod.gitappkotlin.network
 
 import com.jesen.cod.common.ext.ensureDir
 import com.jesen.cod.gitappkotlin.AppContext
+import com.jesen.cod.gitappkotlin.network.interceptors.AcceptInterceptor
+import com.jesen.cod.gitappkotlin.network.interceptors.AuthInterceptor
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -28,6 +30,8 @@ val retrofit by lazy {
                 .readTimeout(60, TimeUnit.SECONDS)
                 .writeTimeout(60, TimeUnit.SECONDS)
                 .cache(Cache(cacheFile, 1024 * 1024 * 1024))
+                .addInterceptor(AcceptInterceptor())
+                .addInterceptor(AuthInterceptor())
                 .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build()
         )

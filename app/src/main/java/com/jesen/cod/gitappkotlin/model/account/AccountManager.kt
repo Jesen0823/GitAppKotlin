@@ -11,6 +11,9 @@ import com.jesen.cod.gitappkotlin.utils.fromJson
 import com.jesen.cod.gitappkotlin.utils.pref
 import retrofit2.HttpException
 import rx.Observable
+import rx.Scheduler
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 
 interface OnAccountStateChangeListener {
 
@@ -32,7 +35,7 @@ object AccountManager {
     var currentUser: User? = null
         get() {
             if (field == null && userJson.isNotEmpty()) {
-                field = Gson().fromJson<User>(userJson)
+                field = Gson().fromJson<User>(userJson) // util中封装的方法
             }
             return field
         }
@@ -61,6 +64,32 @@ object AccountManager {
 
     fun isLoggedIn(): Boolean = token.isNotEmpty()
 
+    fun login1() {
+        AuthService.createAuthorization(AuthorizationReq())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .doOnNext {
+                if (it.token.isEmpty()) throw AccountException(it)
+            }.retryWhen {
+                it.flatMap {
+                    if (it is AccountException) {
+                        AuthService.deleteAuthorization(it.authorizationRsp.id)
+                    } else {
+                        Observable.error(it)
+                    }
+                }
+            }
+            .flatMap {
+                token = it.token
+                authId = it.id
+                UserService.getAuthenticatedUser()
+            }
+            .map {
+                currentUser = it
+                notifyLogin(it)
+            }
+    }
+
     fun login() {
         AuthService.createAuthorization(AuthorizationReq())
             .doOnNext {
@@ -82,6 +111,22 @@ object AccountManager {
             .map {
                 currentUser = it
                 notifyLogin(it)
+            }
+    }
+
+    fun logout1() {
+        AuthService.deleteAuthorization(authId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .doOnNext {
+                if (it.isSuccessful) {
+                    authId = -1
+                    token = ""
+                    currentUser = null
+                    notifyLogout()
+                } else {
+                    throw HttpException(it)
+                }
             }
     }
 
