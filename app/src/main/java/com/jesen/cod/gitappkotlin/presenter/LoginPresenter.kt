@@ -1,5 +1,6 @@
 package com.jesen.cod.gitappkotlin.presenter
 
+import com.jesen.cod.gitappkotlin.BuildConfig
 import com.jesen.cod.gitappkotlin.model.account.AccountManager
 import com.jesen.cod.gitappkotlin.view.LoginActivity
 import com.jesen.cod.mvp.impl.BasePresenter
@@ -28,6 +29,10 @@ class LoginPresenter :BasePresenter<LoginActivity>(){
 
     override fun onResume() {
         super.onResume()
-        view.onDataInit(AccountManager.username, AccountManager.passwd)
+        if (BuildConfig.DEBUG){
+            view.onDataInit(BuildConfig.testUserName,BuildConfig.testPassword)
+        }else {
+            view.onDataInit(AccountManager.username, AccountManager.passwd)
+        }
     }
 }

@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+apply from: "./local.gradle"
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -17,7 +19,13 @@ android {
     }
 
     buildTypes {
+        debug{
+            buildConfigField "String","testUserName",'"'+project.username+'"'
+            buildConfigField "String","testPassword",'"'+project.password+'"'
+        }
         release {
+            buildConfigField "String","testUserName",'""'
+            buildConfigField "String","testPassword",'""'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
