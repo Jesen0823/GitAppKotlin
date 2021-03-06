@@ -16,20 +16,22 @@ import com.jesen.cod.gitappkotlin.presenter.LoginPresenter
 import com.jesen.cod.gitappkotlin.ui.login.LoginViewModel
 import com.jesen.cod.gitappkotlin.utils.hideSoftInput
 import com.jesen.cod.mvp.impl.BaseActivity
+import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.toast
 
 class LoginActivity : BaseActivity<LoginPresenter>() {
 
-    private val signInBoolean by lazy { findViewById<Button>(R.id.login) }
-    private val userName by lazy { findViewById<EditText>(R.id.username) }
+    // findViewById不要也行，因为有KAE即 apply plugin: 'kotlin-android-extensions'
+    private val signInButton by lazy { findViewById<Button>(R.id.signInButton) }
+    private val userName by lazy { findViewById<EditText>(R.id.userName) }
     private val password by lazy { findViewById<EditText>(R.id.password) }
-    private val loginProgress by lazy { findViewById<ProgressBar>(R.id.loading) }
+    private val loginProgress by lazy { findViewById<ProgressBar>(R.id.loginProgress) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        signInBoolean.setOnClickListener {
+        signInButton.setOnClickListener {
             presenter.checkUserName(userName.text.toString())
                 .yes {
                     presenter.checkPasswd(password.text.toString())
