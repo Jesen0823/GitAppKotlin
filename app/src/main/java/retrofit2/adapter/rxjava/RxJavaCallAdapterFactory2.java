@@ -16,11 +16,15 @@ package retrofit2.adapter.rxjava;
  * limitations under the License.
  */
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+
 import javax.annotation.Nullable;
+
 import retrofit2.CallAdapter;
 import retrofit2.HttpException;
 import retrofit2.Response;
@@ -64,7 +68,7 @@ public final class RxJavaCallAdapterFactory2 extends CallAdapter.Factory {
      * by default.
      */
     public static RxJavaCallAdapterFactory2 create() {
-        return new RxJavaCallAdapterFactory2(null, false);
+        return new RxJavaCallAdapterFactory2(null, null, false);
     }
 
     /**
@@ -72,7 +76,7 @@ public final class RxJavaCallAdapterFactory2 extends CallAdapter.Factory {
      * {@link Observable#subscribeOn} has no effect on stream types created by this factory.
      */
     public static RxJavaCallAdapterFactory2 createAsync() {
-        return new RxJavaCallAdapterFactory2(null, true);
+        return new RxJavaCallAdapterFactory2(null, null, true);
     }
 
     /**
@@ -80,16 +84,27 @@ public final class RxJavaCallAdapterFactory2 extends CallAdapter.Factory {
      * {@linkplain Observable#subscribeOn(Scheduler) subscribe on} {@code scheduler} by default.
      */
     @SuppressWarnings("ConstantConditions") // Guarding public API nullability.
-    public static RxJavaCallAdapterFactory2 createWithScheduler(Scheduler scheduler) {
-        if (scheduler == null) throw new NullPointerException("scheduler == null");
-        return new RxJavaCallAdapterFactory2(scheduler, false);
+    public static RxJavaCallAdapterFactory2 createWithSchedulers(@NonNull Scheduler schedulerSubscribeOn, @NonNull Scheduler schedulerObserveOn) {
+        if (schedulerSubscribeOn == null) throw new NullPointerException("SubscribeOn == null");
+        if (schedulerObserveOn == null) throw new NullPointerException("ObserveOn == null");
+
+        return new RxJavaCallAdapterFactory2(schedulerSubscribeOn, schedulerObserveOn, false);
     }
 
-    private final @Nullable Scheduler scheduler;
+    public static RxJavaCallAdapterFactory2 createWithScheduler(@NonNull Scheduler schedulerSubscribeOn) {
+        if (schedulerSubscribeOn == null) throw new NullPointerException("SubscribeOn == null");
+
+        return new RxJavaCallAdapterFactory2(schedulerSubscribeOn, null, false);
+    }
+
+    private final @Nullable
+    Scheduler schedulerObserveOn;
+    private final Scheduler schedulerSubscribeOn;
     private final boolean isAsync;
 
-    private RxJavaCallAdapterFactory2(@Nullable Scheduler scheduler, boolean isAsync) {
-        this.scheduler = scheduler;
+    private RxJavaCallAdapterFactory2(@Nullable Scheduler subscribeOn, Scheduler observeOn, boolean isAsync) {
+        this.schedulerObserveOn = observeOn;
+        this.schedulerSubscribeOn = subscribeOn;
         this.isAsync = isAsync;
     }
 
@@ -103,7 +118,7 @@ public final class RxJavaCallAdapterFactory2 extends CallAdapter.Factory {
         }
 
         if (isCompletable) {
-            return new RxJavaCallAdapter2(Void.class, scheduler, isAsync, false, true, false, true);
+            return new RxJavaCallAdapter2(Void.class, schedulerSubscribeOn, schedulerObserveOn, isAsync, false, true, false, true);
         }
 
         boolean isResult = false;
@@ -135,7 +150,7 @@ public final class RxJavaCallAdapterFactory2 extends CallAdapter.Factory {
             isBody = true;
         }
 
-        return new RxJavaCallAdapter2(responseType, scheduler, isAsync, isResult, isBody, isSingle,
+        return new RxJavaCallAdapter2(responseType, schedulerSubscribeOn, schedulerObserveOn, isAsync, isResult, isBody, isSingle,
                 false);
     }
 }

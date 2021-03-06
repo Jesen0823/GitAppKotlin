@@ -28,17 +28,20 @@ import rx.Scheduler;
 
 final class RxJavaCallAdapter2<R> implements CallAdapter<R, Object> {
     private final Type responseType;
-    private final @Nullable Scheduler scheduler;
+    private final @Nullable
+    Scheduler schedulerObserveOn;
     private final boolean isAsync;
     private final boolean isResult;
     private final boolean isBody;
     private final boolean isSingle;
     private final boolean isCompletable;
+    private final Scheduler schedulerSubscribeOn;
 
-    RxJavaCallAdapter2(Type responseType, @Nullable Scheduler scheduler, boolean isAsync,
+    RxJavaCallAdapter2(Type responseType, Scheduler schedulerSubscribeOn, @Nullable Scheduler schedulerObserveOn, boolean isAsync,
                        boolean isResult, boolean isBody, boolean isSingle, boolean isCompletable) {
         this.responseType = responseType;
-        this.scheduler = scheduler;
+        this.schedulerObserveOn = schedulerObserveOn;
+        this.schedulerSubscribeOn = schedulerSubscribeOn;
         this.isAsync = isAsync;
         this.isResult = isResult;
         this.isBody = isBody;
@@ -65,8 +68,11 @@ final class RxJavaCallAdapter2<R> implements CallAdapter<R, Object> {
         }
         Observable<?> observable = Observable.create(func);
 
-        if (scheduler != null) {
-            observable = observable.subscribeOn(scheduler);
+        if (schedulerObserveOn != null) {
+            observable = observable.observeOn(schedulerObserveOn);
+        }
+        if (schedulerSubscribeOn != null) {
+            observable = observable.subscribeOn(schedulerSubscribeOn);
         }
 
         if (isSingle) {
