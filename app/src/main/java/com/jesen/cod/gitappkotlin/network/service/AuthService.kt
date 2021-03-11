@@ -1,14 +1,10 @@
 package com.jesen.cod.gitappkotlin.network.service
 
-import com.jesen.cod.gitappkotlin.entities.AuthorizationReq
-import com.jesen.cod.gitappkotlin.entities.AuthorizationRsp
+import com.jesen.cod.gitappkotlin.entities.*
 import com.jesen.cod.gitappkotlin.network.retrofit
 import com.jesen.cod.gitappkotlin.setting.Configs
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.PUT
-import retrofit2.http.Path
+import retrofit2.http.*
 import rx.Observable
 
 interface AuthApi {
@@ -22,6 +18,23 @@ interface AuthApi {
 
     @DELETE("/authorizations/{id}")
     fun deleteAuthorization(@Path("id") id: Int): Observable<Response<Any>>
+
+    @POST("login/device/code")
+    fun getDeviceCode(
+        @Body req: VerificationCodeReq//,
+        //@Query("client_id") client_id: String,
+        //@Query("scope") scope: String
+    )
+            : Observable<VerificationCodeRsp>
+
+    @POST("/login/oauth/access_token?")
+    fun deviceAuthorization(
+        @Body req: DeviceAuthorizationReq,
+        @Query("client_id") client_id: String,
+        @Query("device_code") device_code: String,
+        @Query("grant_type") grant_type: String
+    )
+            : Observable<DeviceAuthorizationRsp>
 
 }
 

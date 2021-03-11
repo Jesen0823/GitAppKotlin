@@ -4,9 +4,11 @@ import com.jesen.cod.common.ext.ensureDir
 import com.jesen.cod.gitappkotlin.AppContext
 import com.jesen.cod.gitappkotlin.network.interceptors.AcceptInterceptor
 import com.jesen.cod.gitappkotlin.network.interceptors.AuthInterceptor
+import com.jesen.cod.gitappkotlin.network.interceptors.HeaderInterceptor
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.logging.HttpLoggingInterceptor.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory2
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,6 +18,7 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 
 private const val BASE_URL = "https://api.github.com"
+private const val BASE_URL_NEW = "https://github.com/"
 
 private val cacheFile by lazy {
     File(AppContext.cacheDir, "webServiceApi").apply {
@@ -41,10 +44,12 @@ val retrofit by lazy {
                 .cache(Cache(cacheFile, 1024 * 1024 * 1024))
                 .addInterceptor(AcceptInterceptor())
                 .addInterceptor(AuthInterceptor())
-                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                .addInterceptor(HeaderInterceptor())
+                .addInterceptor(HttpLoggingInterceptor().setLevel(Level.BODY))
+                //.enableTls12OnPreLollipop()
                 .build()
         )
-        .baseUrl(BASE_URL)
+        .baseUrl(BASE_URL_NEW)
         .build()
 
 }

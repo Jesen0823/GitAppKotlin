@@ -3,6 +3,7 @@ package com.jesen.cod.gitappkotlin.view
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -10,14 +11,18 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.jesen.cod.common.ext.otherwise
 import com.jesen.cod.common.ext.yes
+import com.jesen.cod.common.log.logger
 
 import com.jesen.cod.gitappkotlin.R
 import com.jesen.cod.gitappkotlin.presenter.LoginPresenter
 import com.jesen.cod.gitappkotlin.ui.login.LoginViewModel
+import com.jesen.cod.gitappkotlin.utils.NetUtil
 import com.jesen.cod.gitappkotlin.utils.hideSoftInput
 import com.jesen.cod.mvp.impl.BaseActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.toast
+
+const val TAG = "LoginActivity"
 
 class LoginActivity : BaseActivity<LoginPresenter>() {
 
@@ -30,13 +35,19 @@ class LoginActivity : BaseActivity<LoginPresenter>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        var s = NetUtil.getMobileIp()
+        logger.debug(TAG, s)
+        Log.d(TAG, s)
 
         signInButton.setOnClickListener {
+            Log.i(TAG, "click login")
+            toast("click me")
             presenter.checkUserName(userName.text.toString())
                 .yes {
                     presenter.checkPasswd(password.text.toString())
                         .yes {
                             hideSoftInput()
+                            Log.i(TAG, "doLogin")
                             presenter.doLogin(userName.text.toString(), password.text.toString())
                         }
                         .otherwise {
@@ -56,15 +67,17 @@ class LoginActivity : BaseActivity<LoginPresenter>() {
     }
 
     fun onLoginStart() {
-
+        showProgress(true)
     }
 
     fun onLoginError(e: Throwable) {
         e.printStackTrace()
+        showProgress(false)
         toast("登录失败")
     }
 
     fun onLoginSuccess() {
+        showProgress(false)
         toast("登录成功")
     }
 
