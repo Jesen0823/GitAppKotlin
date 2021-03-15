@@ -11,4 +11,12 @@
     <string name="login_failed">"Login failed"</string>
     <string name="username_invialid">用户名不合法</string>
     <string name="passwd_invialid">密码不合法</string>
+    <string name="click_to_login">点击登录</string>
+    <string name="get_device_code_error">获取device_code失败，请检查网络！</string>
+    <string name="alert_title">GitHub授权</string>
+    <string name="alert_message">您的user_code是[%s], 是否复制并跳转web页面鉴权？</string>
+    <string name="alert_positive">已授权</string>
+    <string name="alert_negative">再想想</string>
+    <string name="alert_neutral">复制并跳转</string>
+
 </resources>

@@ -1,20 +1,18 @@
 package com.jesen.cod.gitappkotlin.model.account
 
-import android.accounts.AccountsException
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.google.gson.Gson
-import com.jesen.cod.gitappkotlin.AppContext
 import com.jesen.cod.gitappkotlin.entities.*
 import com.jesen.cod.gitappkotlin.network.service.AuthService
 import com.jesen.cod.gitappkotlin.network.service.UserService
 import com.jesen.cod.gitappkotlin.setting.Configs
 import com.jesen.cod.gitappkotlin.utils.fromJson
 import com.jesen.cod.gitappkotlin.utils.pref
-import org.jetbrains.anko.toast
 import retrofit2.HttpException
 import rx.Observable
-import rx.Scheduler
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
@@ -32,21 +30,20 @@ class VerificationCodeException(val verificationCodeRsp: VerificationCodeRsp) :
 
 const val TAG = "AccountManager"
 
-private var map = mapOf("client_id" to Configs.Account.clientId, "scope" to Configs.Account.scope)
-
-
 object AccountManager {
-    var authId by pref(-1)
-    var username by pref("")
-    var passwd by pref("")
-    var token by pref("")
+    var authId by pref("authId", -1)
+    var username by pref("username", "")
+    var passwd by pref("passwd", "")
+    var token by pref("token", "")
 
-    var device_code by pref("")
-    var user_code by pref("")
-    var verification_uri by pref("")
+    var device_code by pref("device_code", "")
+    var user_code by pref("user_code", "")
+    var verification_uri by pref("verification_uri", "")
 
     // 保存用户信息
-    private var userJson by pref("")
+    private var userJson by pref("userJson", "")
+
+    private lateinit var currentVfcRsp: VerificationCodeRsp
 
     var currentUser: User? = null
         get() {
@@ -109,9 +106,12 @@ object AccountManager {
     fun login() =
         AuthService.createAuthorization(AuthorizationReq())
             .doOnNext {
+                Log.i(TAG, "login doOnNext")
                 if (it.token.isEmpty()) throw AccountException(it)
             }.retryWhen {
+                Log.i(TAG, "login retryWhen")
                 it.flatMap {
+                    Log.i(TAG, "login retryWhen flatMap")
                     if (it is AccountException) {
                         AuthService.deleteAuthorization(it.authorizationRsp.id)
                     } else {
@@ -120,6 +120,7 @@ object AccountManager {
                 }
             }
             .flatMap {
+                Log.i(TAG, "login flatMap")
                 token = it.token
                 authId = it.id
                 UserService.getAuthenticatedUser()
@@ -161,40 +162,50 @@ object AccountManager {
 
 
     fun getVerificationCode() =
-        AuthService.getDeviceCode(VerificationCodeReq()/*Configs.Account.clientId,Configs.Account.scope*/)
-            //AuthService.getDeviceCode(VerificationCodeReq(),map)
-            .doOnNext {
-                Log.i(TAG, "result:$it")
-                if (it.device_code.isNotEmpty()) {
-                    device_code = it.device_code
-                    user_code = it.user_code
-                    verification_uri = it.verification_uri
-                    Log.i(
-                        TAG, "verification result:\ndevice_code:${device_code}\nuser_code:" +
-                                "${user_code}\nverification_uri:${verification_uri}"
-                    )
-                }
-            }
-            .doOnCompleted {
-                Log.i(TAG, "doOnCompleted")
-            }
+        AuthService.getDeviceCode(VerificationCodeReq())
             .doOnError {
-                Log.i(TAG, "doOnError")
-
+                Log.d(
+                    TAG,
+                    "doOnError:${it.stackTrace}\ndoOnError message:${it.message}" +
+                            "\ncause:${it.cause}"
+                )
+            }
+            .doOnNext {
+                device_code = it.device_code
+                user_code = it.user_code
+                verification_uri = it.verification_uri
+                Log.i(
+                    TAG, "verification result:\ndevice_code:${device_code}\nuser_code:" +
+                            "${user_code}\nverification_uri:${verification_uri}"
+                )
             }
 
 
-    fun postDeviceAuthorization() =
+    fun postGetAccessToken() =
         AuthService.deviceAuthorization(
             DeviceAuthorizationReq(
                 Configs.Account.clientId,
                 device_code,
-                ""
-            ),
-            Configs.Account.clientId,
-            device_code,
-            ""
-        ).doOnNext {
+                Configs.Account.grant_type
+            )
+        )
+            .doOnError {
+                Log.d(
+                    TAG,
+                    "doOnError:${it.stackTrace}\ndoOnError message:${it.message}" +
+                            "\ncause:${it.cause}"
+                )
+            }
+            .doOnNext {
+                token = it.access_token
+                //currentUser = it
+                Log.d(TAG, "postGetAccessToken token:?$token")
+            }
 
-        }
+    fun copyToClipboard(content: String, context: Context) {
+        val clipboardManager =
+            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("Label", content)
+        clipboardManager.primaryClip = clipData
+    }
 }

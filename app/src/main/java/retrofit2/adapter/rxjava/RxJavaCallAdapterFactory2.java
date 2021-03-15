@@ -1,5 +1,3 @@
-package retrofit2.adapter.rxjava;
-
 /*
  * Copyright (C) 2015 Square, Inc.
  *
@@ -15,14 +13,14 @@ package retrofit2.adapter.rxjava;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import androidx.annotation.NonNull;
+package retrofit2.adapter.rxjava;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import retrofit2.CallAdapter;
@@ -84,27 +82,34 @@ public final class RxJavaCallAdapterFactory2 extends CallAdapter.Factory {
      * {@linkplain Observable#subscribeOn(Scheduler) subscribe on} {@code scheduler} by default.
      */
     @SuppressWarnings("ConstantConditions") // Guarding public API nullability.
-    public static RxJavaCallAdapterFactory2 createWithSchedulers(@NonNull Scheduler schedulerSubscribeOn, @NonNull Scheduler schedulerObserveOn) {
-        if (schedulerSubscribeOn == null) throw new NullPointerException("SubscribeOn == null");
-        if (schedulerObserveOn == null) throw new NullPointerException("ObserveOn == null");
-
-        return new RxJavaCallAdapterFactory2(schedulerSubscribeOn, schedulerObserveOn, false);
-    }
-
-    public static RxJavaCallAdapterFactory2 createWithScheduler(@NonNull Scheduler schedulerSubscribeOn) {
-        if (schedulerSubscribeOn == null) throw new NullPointerException("SubscribeOn == null");
-
+    public static RxJavaCallAdapterFactory2 createWithScheduler(Scheduler schedulerSubscribeOn) {
+        if (schedulerSubscribeOn == null)
+            throw new NullPointerException("schedulerSubscribeOn == null");
         return new RxJavaCallAdapterFactory2(schedulerSubscribeOn, null, false);
     }
 
+    /**
+     * Returns an instance which creates synchronous observables that
+     * {@linkplain Observable#subscribeOn(Scheduler) subscribe on} {@code scheduler} by default.
+     */
+    @SuppressWarnings("ConstantConditions") // Guarding public API nullability.
+    public static RxJavaCallAdapterFactory2 createWithSchedulers(@Nonnull Scheduler schedulerSubscribeOn, @Nonnull Scheduler schedulerObserveOn) {
+        if (schedulerSubscribeOn == null)
+            throw new NullPointerException("schedulerSubscribeOn == null");
+        if (schedulerObserveOn == null)
+            throw new NullPointerException("schedulerObserveOn == null");
+        return new RxJavaCallAdapterFactory2(schedulerSubscribeOn, schedulerObserveOn, false);
+    }
+
+    private final @Nullable
+    Scheduler schedulerSubscribeOn;
     private final @Nullable
     Scheduler schedulerObserveOn;
-    private final Scheduler schedulerSubscribeOn;
     private final boolean isAsync;
 
-    private RxJavaCallAdapterFactory2(@Nullable Scheduler subscribeOn, Scheduler observeOn, boolean isAsync) {
-        this.schedulerObserveOn = observeOn;
-        this.schedulerSubscribeOn = subscribeOn;
+    private RxJavaCallAdapterFactory2(@Nullable Scheduler schedulerSubscribeOn, @Nullable Scheduler schedulerObserveOn, boolean isAsync) {
+        this.schedulerSubscribeOn = schedulerSubscribeOn;
+        this.schedulerObserveOn = schedulerObserveOn;
         this.isAsync = isAsync;
     }
 
@@ -118,11 +123,12 @@ public final class RxJavaCallAdapterFactory2 extends CallAdapter.Factory {
         }
 
         if (isCompletable) {
-            return new RxJavaCallAdapter2(Void.class, schedulerSubscribeOn, schedulerObserveOn, isAsync, false, true, false, true);
+            return new RxJavaCallAdapter2(Void.class, schedulerSubscribeOn, schedulerObserveOn, isAsync, false, true, false, false, true);
         }
 
         boolean isResult = false;
         boolean isBody = false;
+        boolean isPaging = false;
         Type responseType;
         if (!(returnType instanceof ParameterizedType)) {
             String name = isSingle ? "Single" : "Observable";
@@ -145,13 +151,22 @@ public final class RxJavaCallAdapterFactory2 extends CallAdapter.Factory {
             }
             responseType = getParameterUpperBound(0, (ParameterizedType) observableType);
             isResult = true;
+        } else if (rawObservableType == GitHubPaging.class) {
+            if (!(observableType instanceof ParameterizedType)) {
+                throw new IllegalStateException("Result must be parameterized"
+                        + " as GitHubPaging<Foo> or GitHubPaging<? extends Foo>");
+            }
+            responseType = observableType;
+            isPaging = true;
+        } else if (PagingWrapper.class.isAssignableFrom(rawObservableType)) {
+            responseType = observableType;
+            isPaging = true;
         } else {
             responseType = observableType;
             isBody = true;
         }
 
-        return new RxJavaCallAdapter2(responseType, schedulerSubscribeOn, schedulerObserveOn, isAsync, isResult, isBody, isSingle,
+        return new RxJavaCallAdapter2(responseType, schedulerSubscribeOn, schedulerObserveOn, isAsync, isResult, isBody, isPaging, isSingle,
                 false);
     }
 }
-

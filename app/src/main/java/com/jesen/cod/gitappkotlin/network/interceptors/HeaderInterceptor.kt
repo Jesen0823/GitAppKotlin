@@ -9,8 +9,8 @@ class HeaderInterceptor : Interceptor {
         val original = chain.request()
         return chain.proceed(original.newBuilder()
             .apply {
-                header("Accept-Encoding", "gzip")
-                header("Accept", "application/json")
+                //header("Accept-Encoding", "gzip")
+                header("Accept", "application/json; charset=utf-8")
                 //header("Content-Type", "application/x-www-form-urlencoded; charset=utf-8")
                 header("Content-Type", "application/json")
                 method(original.method(), original.body())

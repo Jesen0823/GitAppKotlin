@@ -8,7 +8,7 @@ import retrofit2.http.*
 import rx.Observable
 
 interface AuthApi {
-
+    // 针对旧API（https://api.github.com）的鉴权，已弃用
     @PUT("/authorizations/clients/${Configs.Account.clientId}/{fingerPrint}")
     fun createAuthorization(
         @Body req: AuthorizationReq,
@@ -19,23 +19,25 @@ interface AuthApi {
     @DELETE("/authorizations/{id}")
     fun deleteAuthorization(@Path("id") id: Int): Observable<Response<Any>>
 
+    /**
+     * 第一步，获取device_code,verification_uri
+     * 新API(https://github.com/)
+     * */
     @POST("login/device/code")
     fun getDeviceCode(
         @Body req: VerificationCodeReq//,
         //@Query("client_id") client_id: String,
         //@Query("scope") scope: String
-    )
-            : Observable<VerificationCodeRsp>
+    ): Observable<VerificationCodeRsp>
 
-    @POST("/login/oauth/access_token?")
+    /**
+     * 第二步，获取token
+     * 新API(https://github.com/)
+     * */
+    @POST("login/oauth/access_token")
     fun deviceAuthorization(
-        @Body req: DeviceAuthorizationReq,
-        @Query("client_id") client_id: String,
-        @Query("device_code") device_code: String,
-        @Query("grant_type") grant_type: String
-    )
-            : Observable<DeviceAuthorizationRsp>
-
+        @Body req: DeviceAuthorizationReq
+    ): Observable<DeviceAuthorizationRsp>
 }
 
 object AuthService : AuthApi by retrofit.create(AuthApi::class.java)

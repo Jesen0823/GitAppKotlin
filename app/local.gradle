@@ -2,7 +2,7 @@ def localPropertiesFile = new File(rootDir, "debug.properties")
 def prop = new Properties()
 prop.load(new FileInputStream(localPropertiesFile))
 def propNames = prop.propertyNames()
-while (propNames.hasMoreElements()){
+while (propNames.hasMoreElements()) {
     def propName = propNames.nextElement()
     project.extensions.add(propName, prop.getProperty(propName))
 }
