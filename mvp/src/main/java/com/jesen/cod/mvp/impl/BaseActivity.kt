@@ -2,7 +2,7 @@ package com.jesen.cod.mvp.impl
 
 import android.content.res.Configuration
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.support.v7.app.AppCompatActivity
 import com.jesen.cod.mvp.IMvpView
 import com.jesen.cod.mvp.IPresenter
 import java.lang.reflect.ParameterizedType

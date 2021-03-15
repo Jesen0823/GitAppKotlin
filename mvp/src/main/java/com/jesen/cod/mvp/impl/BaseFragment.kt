@@ -2,7 +2,7 @@ package com.jesen.cod.mvp.impl
 
 import android.content.res.Configuration
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.support.v4.app.Fragment
 import com.jesen.cod.mvp.IMvpView
 import com.jesen.cod.mvp.IPresenter
 import java.lang.reflect.ParameterizedType
