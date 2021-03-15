@@ -10,6 +10,8 @@ import java.net.NetworkInterface
 
 object NetworkUtil {
 
+    private const val TAG = "NetworkUtil"
+
     fun isAvailable(): Boolean =
         AppContext.connectivityManager.activeNetworkInfo?.isConnected ?: false
 
@@ -20,7 +22,7 @@ object NetworkUtil {
         val wifiInfo = wifiManager.connectionInfo
         val ipAddress = wifiInfo.ipAddress
         ip = intToIp(ipAddress)
-        Log.i("wifi_ip地址为------", ip)
+        AppLog.i(TAG, "wifi_ip地址为------$ip")
         return ip
     }
 
@@ -37,7 +39,7 @@ object NetworkUtil {
         val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
         val wifiInfo = wifiManager.connectionInfo
         val ipAddress = wifiInfo.ipAddress
-        Log.i("getIp", ipAddress.toString() + "")
+        AppLog.i(TAG, "getIp: $ipAddress")
         val ip =
             (ipAddress and 0xff).toString() + "." + (ipAddress shr 8 and 0xff) + "." + (ipAddress shr 16 and 0xff) + "." + (ipAddress shr 24 and 0xff)
         return ip
@@ -50,10 +52,10 @@ object NetworkUtil {
             var eip = nif.inetAddresses
             while (eip.hasMoreElements()) {//获取接口的地址
                 var ia = eip.nextElement()
-                Log.i("Util", ia.hostAddress)
+                AppLog.i(TAG, "getMobileIp: ${ia.hostAddress}")
 
                 if (nif.displayName.contains("wlan0")) { //获取无线网卡Ip地址
-                    Log.i("Util wlan0", ia.hostAddress)
+                    AppLog.i(TAG, "wlan0" + ia.hostAddress)
                     if (checkIp(ia.hostAddress)) {
                         return ia.hostAddress
                     }

@@ -9,6 +9,7 @@ import com.jesen.cod.gitappkotlin.entities.*
 import com.jesen.cod.gitappkotlin.network.service.AuthService
 import com.jesen.cod.gitappkotlin.network.service.UserService
 import com.jesen.cod.gitappkotlin.setting.Configs
+import com.jesen.cod.gitappkotlin.utils.AppLog
 import com.jesen.cod.gitappkotlin.utils.fromJson
 import com.jesen.cod.gitappkotlin.utils.pref
 import retrofit2.HttpException
@@ -28,7 +29,7 @@ class AccountException(val authorizationRsp: AuthorizationRsp) : Exception("Alre
 class VerificationCodeException(val verificationCodeRsp: VerificationCodeRsp) :
     Exception("Get verification Code fail")
 
-const val TAG = "AccountManager"
+private const val TAG = "AccountManager"
 
 object AccountManager {
     var authId by pref("authId", -1)
@@ -106,12 +107,12 @@ object AccountManager {
     fun login() =
         AuthService.createAuthorization(AuthorizationReq())
             .doOnNext {
-                Log.i(TAG, "login doOnNext")
+                AppLog.i(TAG, "login doOnNext")
                 if (it.token.isEmpty()) throw AccountException(it)
             }.retryWhen {
-                Log.i(TAG, "login retryWhen")
+                AppLog.i(TAG, "login retryWhen")
                 it.flatMap {
-                    Log.i(TAG, "login retryWhen flatMap")
+                    AppLog.i(TAG, "login retryWhen flatMap")
                     if (it is AccountException) {
                         AuthService.deleteAuthorization(it.authorizationRsp.id)
                     } else {
@@ -120,7 +121,7 @@ object AccountManager {
                 }
             }
             .flatMap {
-                Log.i(TAG, "login flatMap")
+                AppLog.i(TAG, "login flatMap")
                 token = it.token
                 authId = it.id
                 UserService.getAuthenticatedUser()
@@ -199,7 +200,7 @@ object AccountManager {
             .doOnNext {
                 token = it.access_token
                 //currentUser = it
-                Log.d(TAG, "postGetAccessToken token:?$token")
+                AppLog.d(TAG, "postGetAccessToken token:?$token")
             }
 
     fun copyToClipboard(content: String, context: Context) {

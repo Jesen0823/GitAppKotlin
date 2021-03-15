@@ -7,30 +7,31 @@ import com.jesen.cod.common.ext.yes
 import com.jesen.cod.gitappkotlin.BuildConfig
 import com.jesen.cod.gitappkotlin.R
 import com.jesen.cod.gitappkotlin.model.account.AccountManager
+import com.jesen.cod.gitappkotlin.utils.AppLog
 import com.jesen.cod.gitappkotlin.view.LoginActivity
 import com.jesen.cod.mvp.impl.BasePresenter
 
-const val TAG = "LoginPresenter"
+private const val TAG = "LoginPresenter"
 
 class LoginPresenter : BasePresenter<LoginActivity>() {
 
     fun doLogin(name: String, passwd: String) {
         AccountManager.username = name
         AccountManager.passwd = passwd
-        Log.i(TAG, "u:p=${name}:${passwd}")
+        AppLog.i(TAG, "u:p=${name}:${passwd}")
         view.onLoginStart()
         AccountManager.getVerificationCode()
             .subscribe(
                 {
-                    Log.d(TAG, "getVerificationCode success")
+                    AppLog.d(TAG, "getVerificationCode success")
                     view.onVerificationSuccess(it.verification_uri, it.user_code)
 
                     /*val result = GsonBuilder().create().toJson(it)
                     val jobject = JsonParser().parse(result).asJsonObject
-                    Log.d(TAG, "next jobject :$jobject")*/
+                    AppLog.d(TAG, "next jobject :$jobject")*/
                 },
                 {
-                    Log.d(TAG, "getVerificationCode fail")
+                    AppLog.d(TAG, "getVerificationCode fail")
                     view.onVerificationFailure(R.string.get_device_code_error.toString())
                     view.onLoginError(it)
                 })

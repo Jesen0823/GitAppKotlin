@@ -40,14 +40,14 @@ class LoginActivity : BaseActivity<LoginPresenter>(), AlertDialogListener {
         setContentView(R.layout.activity_login)
 
         signInButton.setOnClickListener {
-            Log.i(TAG, "click login")
+            AppLog.i(TAG, "click login")
             toast("click me")
             presenter.checkUserName(userName.text.toString())
                 .yes {
                     presenter.checkPasswd(password.text.toString())
                         .yes {
                             hideSoftInput()
-                            Log.i(TAG, "doLogin")
+                            AppLog.i(TAG, "doLogin")
                             presenter.doLogin(userName.text.toString(), password.text.toString())
                         }
                         .otherwise {
@@ -95,7 +95,7 @@ class LoginActivity : BaseActivity<LoginPresenter>(), AlertDialogListener {
      * step 1,获取device_code&verification_uri成功
      * */
     fun onVerificationSuccess(verificationUri: String, userCode: String) {
-        Log.d(TAG, "onVerificationSuccess")
+        AppLog.d(TAG, "onVerificationSuccess")
         val obj: AlertElement = AlertElement(
             resources.getString(R.string.alert_title),
             resources.getString(R.string.alert_message).format(userCode),
@@ -143,7 +143,7 @@ class LoginActivity : BaseActivity<LoginPresenter>(), AlertDialogListener {
      * 打开已安装浏览器
      * */
     fun openWebPage(url: String) {
-        Log.d(TAG, "openWebPage$url")
+        AppLog.d(TAG, "openWebPage$url")
         val webpage: Uri = Uri.parse(url)
         val intent = Intent(Intent.ACTION_VIEW, webpage)
         if (intent.resolveActivity(packageManager) != null) {
@@ -154,16 +154,16 @@ class LoginActivity : BaseActivity<LoginPresenter>(), AlertDialogListener {
     override fun sendResult(type: ClickType) {
         when (type) {
             ClickType.POSITIVE -> {
-                Log.d(TAG, "sendResult POSITIVE")
+                AppLog.d(TAG, "sendResult POSITIVE")
                 presenter.requestAccessToken()
             }
             ClickType.NEGATIVE -> {
-                Log.d(TAG, "sendResult NEGATIVE")
+                AppLog.d(TAG, "sendResult NEGATIVE")
                 onCancelLogin()
             }
             ClickType.NEUTRAL -> {
-                Log.d(TAG, "sendResult NEUTRAL")
-                Log.d(TAG, "verification_uri NEUTRAL${AccountManager.verification_uri}")
+                AppLog.d(TAG, "sendResult NEUTRAL")
+                AppLog.d(TAG, "verification_uri NEUTRAL${AccountManager.verification_uri}")
                 openWebPage(AccountManager.verification_uri)
                 AccountManager.copyToClipboard(AccountManager.user_code.trim(), this)
 

@@ -13,6 +13,8 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import com.jesen.cod.gitappkotlin.R
 
+private const val TAG = "DialogUtil"
+
 /**
  * AlertDialog数据实体
  * */
@@ -97,14 +99,14 @@ class DialogUtil(clickListener: AlertDialogListener) {
                     Toast.makeText(context, element.negative, Toast.LENGTH_SHORT).show()
                 }
                 .setNeutralButton(element.neutral) { _, _ ->
-                    Log.d("Dialog", "BUTTON_NEGATIVE setNeutralButton ")
+                    AppLog.d(TAG, "BUTTON_NEGATIVE setNeutralButton ")
                 }
                 .create()
         webView.requestFocus()
         dialog.show()
         // 为了防止按钮触发弹窗消失，重写按钮点击监听
         dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
-            Log.d("Dialog", "BUTTON_NEGATIVE setOnClickListener ")
+            AppLog.d(TAG, "BUTTON_NEGATIVE setOnClickListener ")
             listener.sendResult(ClickType.NEUTRAL)
             Toast.makeText(context, element.neutral, Toast.LENGTH_SHORT).show()
         }
@@ -135,7 +137,7 @@ class DialogU(clickListener: AlertDialogListener) {
                     Toast.makeText(context, element.negative, Toast.LENGTH_SHORT).show()
                 }
                 .setNeutralButton(element.neutral) { _, _ ->
-                    Log.d("Dialog", "BUTTON_NEGATIVE setNeutralButton ")
+                    AppLog.d(TAG, "BUTTON_NEGATIVE setNeutralButton ")
                 }
                 .setOnKeyListener(DialogInterface.OnKeyListener { dialog, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -148,7 +150,7 @@ class DialogU(clickListener: AlertDialogListener) {
         dialog.show()
         // 为了防止按钮触发弹窗消失，重写按钮点击监听
         dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
-            Log.d("Dialog", "BUTTON_NEGATIVE setOnClickListener ")
+            AppLog.d(TAG, "BUTTON_NEGATIVE setOnClickListener ")
             listener.sendResult(ClickType.NEUTRAL)
             Toast.makeText(context, element.neutral, Toast.LENGTH_SHORT).show()
         }
