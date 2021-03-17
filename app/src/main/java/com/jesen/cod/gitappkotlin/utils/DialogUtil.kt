@@ -23,7 +23,7 @@ data class AlertElement(
     var message: String,
     var positive: String,
     var negative: String,
-    var neutral: String,
+    var neutral: String?,
     var vertifUrl: String,
     var userCode: String
 )
@@ -109,6 +109,9 @@ class DialogUtil(clickListener: AlertDialogListener) {
             AppLog.d(TAG, "BUTTON_NEGATIVE setOnClickListener ")
             listener.sendResult(ClickType.NEUTRAL)
             Toast.makeText(context, element.neutral, Toast.LENGTH_SHORT).show()
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                listener.sendResult(ClickType.POSITIVE)
+            }
         }
     }
 }
@@ -141,7 +144,7 @@ class DialogU(clickListener: AlertDialogListener) {
                 }
                 .setOnKeyListener(DialogInterface.OnKeyListener { dialog, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        dialog.dismiss()
+                        dialog?.dismiss()
                         return@OnKeyListener true
                     }
                     false

@@ -13,7 +13,7 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 public class SSLSocketFactoryCompat extends SSLSocketFactory {
-    private static final String[] TLS_V12_ONLY = {"TLSv1.2"};
+    private static final String[] TLS_V12_ONLY = {"TLSv1.3"};
 
     private final SSLSocketFactory delegate;
 
@@ -70,7 +70,8 @@ public class SSLSocketFactoryCompat extends SSLSocketFactory {
     }
 
     @Override
-    public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
+    public Socket createSocket(InetAddress address, int port, InetAddress localAddress,
+                               int localPort) throws IOException {
         return enableTls12(delegate.createSocket(address, port, localAddress, localPort));
     }
 }

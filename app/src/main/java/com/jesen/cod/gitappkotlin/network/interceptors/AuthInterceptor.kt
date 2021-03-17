@@ -8,7 +8,7 @@ import okhttp3.Response
 /**
  * 登录鉴权拦截器
  * **/
-
+@Deprecated("API旧协议,2020-11-13谷歌官方废弃")
 class AuthInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {

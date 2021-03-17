@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.jesen.cod.common.anno.PoKo
 import kotlinx.android.parcel.Parcelize
 
+@Deprecated("API旧协议实体类，改用#BasicUser")
 @PoKo
 @Parcelize
 data class BasicUser(
@@ -12,7 +13,7 @@ data class BasicUser(
     var html_url: String
 ): Parcelable
 
-
+@Deprecated("API旧协议实体类，改用#User2")
 @PoKo
 @Parcelize
 data class User(var login: String,

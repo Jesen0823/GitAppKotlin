@@ -35,12 +35,15 @@ class LoginPresenter : BasePresenter<LoginActivity>() {
                     view.onVerificationFailure(R.string.get_device_code_error.toString())
                     view.onLoginError(it)
                 })
-        /* AccountManager.login()
-             .subscribe({
-                 view.onLoginSuccess()
-             },{
-                 view.onLoginError(it)
-             })*/
+
+        /**
+        AccountManager.login()
+        .subscribe({
+        view.onLoginSuccess()
+        },{
+        view.onLoginError(it)
+        })
+         */
     }
 
     fun checkUserName(name: String): Boolean {

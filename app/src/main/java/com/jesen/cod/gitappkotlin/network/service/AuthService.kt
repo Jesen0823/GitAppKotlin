@@ -6,7 +6,6 @@ import com.jesen.cod.gitappkotlin.setting.Configs
 import retrofit2.Response
 import retrofit2.http.*
 import rx.Observable
-
 interface AuthApi {
     // 针对旧API（https://api.github.com）的鉴权，已弃用
     @PUT("/authorizations/clients/${Configs.Account.clientId}/{fingerPrint}")

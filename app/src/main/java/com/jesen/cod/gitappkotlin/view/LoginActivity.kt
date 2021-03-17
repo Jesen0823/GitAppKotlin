@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -34,6 +35,7 @@ class LoginActivity : BaseActivity<LoginPresenter>(), AlertDialogListener {
     private val loginProgress by lazy { findViewById<ProgressBar>(R.id.loginProgress) }
     //private lateinit var dialogUtil: DialogUtil
     private lateinit var dialogUtil: DialogU
+    private var _isLoadingShow = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +63,20 @@ class LoginActivity : BaseActivity<LoginPresenter>(), AlertDialogListener {
 
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_BACK -> {
+                if (loginProgress.visibility == View.VISIBLE) {
+                    loginProgress.visibility = View.INVISIBLE
+                    return true
+                }
+                return super.onKeyDown(keyCode, event)
+            }
+
+            else -> return super.onKeyDown(keyCode, event)
+        }
+    }
+
     private fun showTips(view: EditText, message: String) {
         view.requestFocus()
         view.error = message
@@ -84,6 +100,8 @@ class LoginActivity : BaseActivity<LoginPresenter>(), AlertDialogListener {
     fun onLoginSuccess() {
         showProgress(false)
         toast("登录成功")
+        dialogUtil.dialog?.dismiss()
+        simpleStartActivity<MainActivity>(this) {}
     }
 
     fun onCancelLogin() {
@@ -120,7 +138,7 @@ class LoginActivity : BaseActivity<LoginPresenter>(), AlertDialogListener {
         toast(tips)
     }
 
-    private fun showProgress(show: Boolean) {
+    fun showProgress(show: Boolean) {
         val showAnimTime = resources.getInteger(android.R.integer.config_longAnimTime)
 
         /*loginForm.animate().setDuration(shortAnimTime.toLong()).alpha(

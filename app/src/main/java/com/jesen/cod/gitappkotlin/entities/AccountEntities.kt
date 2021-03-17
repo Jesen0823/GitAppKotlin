@@ -3,6 +3,7 @@ package com.jesen.cod.gitappkotlin.entities
 import com.jesen.cod.common.anno.PoKo
 import com.jesen.cod.gitappkotlin.setting.Configs
 
+@Deprecated("API旧协议,2020-11-13谷歌官方废弃")
 @PoKo
 data class AuthorizationReq(
     var scopes: List<String> = Configs.Account.SCOPES,
@@ -11,6 +12,7 @@ data class AuthorizationReq(
     var client_secret: String = Configs.Account.clientSecret
 )
 
+@Deprecated("API旧协议,2020-11-13谷歌官方废弃")
 @PoKo
 data class AuthorizationRsp(
     var id: Int,

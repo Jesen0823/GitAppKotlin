@@ -19,15 +19,19 @@ import rx.schedulers.Schedulers
 
 interface OnAccountStateChangeListener {
 
-    fun onLogin(user: User)
+    fun onLogin(user2: User2)
 
     fun onLogout()
 }
 
+@Deprecated("API旧协议,2020-11-13谷歌官方废弃")
 class AccountException(val authorizationRsp: AuthorizationRsp) : Exception("Already logged in.")
 
 class VerificationCodeException(val verificationCodeRsp: VerificationCodeRsp) :
-    Exception("Get verification Code fail")
+    Exception("Get verification Code fail!")
+
+class GetAccessTokenException(val deviceAuthorizationRsp: DeviceAuthorizationRsp) :
+    Exception("Get Access_Token fail!")
 
 private const val TAG = "AccountManager"
 
@@ -36,6 +40,7 @@ object AccountManager {
     var username by pref("username", "")
     var passwd by pref("passwd", "")
     var token by pref("token", "")
+    var token_type by pref("token_type", "")
 
     var device_code by pref("device_code", "")
     var user_code by pref("user_code", "")
@@ -46,10 +51,11 @@ object AccountManager {
 
     private lateinit var currentVfcRsp: VerificationCodeRsp
 
-    var currentUser: User? = null
+    // var currentUser: User? = null...
+    var currentUser: User2? = null
         get() {
             if (field == null && userJson.isNotEmpty()) {
-                field = Gson().fromJson<User>(userJson) // util中封装的方法
+                field = Gson().fromJson<User2>(userJson) // util中封装的方法
             }
             return field
         }
@@ -64,9 +70,9 @@ object AccountManager {
 
     val onAccountStateChangeListeners = ArrayList<OnAccountStateChangeListener>()
 
-    private fun notifyLogin(user: User) {
+    private fun notifyLogin(user2: User2) {
         onAccountStateChangeListeners.forEach {
-            it.onLogin(user)
+            it.onLogin(user2)
         }
     }
 
@@ -78,6 +84,7 @@ object AccountManager {
 
     fun isLoggedIn(): Boolean = token.isNotEmpty()
 
+    @Deprecated("API旧协议,2020-11-13谷歌官方废弃")
     fun login1() =
         AuthService.createAuthorization(AuthorizationReq())
             .doOnNext {
@@ -97,13 +104,14 @@ object AccountManager {
                 UserService.getAuthenticatedUser()
             }
             .map {
-                currentUser = it
-                notifyLogin(it)
+                //currentUser = it
+                //notifyLogin(it)
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
 
 
+    @Deprecated("API旧协议,2020-11-13谷歌官方废弃")
     fun login() =
         AuthService.createAuthorization(AuthorizationReq())
             .doOnNext {
@@ -127,11 +135,11 @@ object AccountManager {
                 UserService.getAuthenticatedUser()
             }
             .map {
-                currentUser = it
-                notifyLogin(it)
+                //currentUser = it
+                //notifyLogin(it)
             }
 
-
+    @Deprecated("API旧协议,2020-11-13谷歌官方废弃")
     fun logout1() =
         AuthService.deleteAuthorization(authId)
             .doOnNext {
@@ -147,7 +155,7 @@ object AccountManager {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
 
-
+    @Deprecated("API旧协议,2020-11-13谷歌官方废弃")
     fun logout() =
         AuthService.deleteAuthorization(authId)
             .doOnNext {
@@ -201,6 +209,21 @@ object AccountManager {
                 token = it.access_token
                 //currentUser = it
                 AppLog.d(TAG, "postGetAccessToken token:?$token")
+            }
+            .doOnNext {
+                AppLog.d(TAG, "postGetAccessToken doOnNext, token:${it.access_token}")
+                if (it.access_token.isEmpty()) throw GetAccessTokenException(it)
+            }
+            .flatMap {
+                AppLog.d(TAG, "get access_token flatMap  and to getAuthenticatedUser.")
+                token = it.access_token
+                token_type = it.token_type
+                UserService.getAuthenticatedUser2()
+            }
+            .map {
+                AppLog.d(TAG, "getAuthenticatedUser2 map  and get currentUser.")
+                currentUser = it
+                notifyLogin(it)
             }
 
     fun copyToClipboard(content: String, context: Context) {

@@ -14,7 +14,7 @@ object AppLog {
 
     private var level = VERBOSE
 
-    fun decTag(tag: String): String = "||$TAG_HEADER|| $tag"
+    private fun decTag(tag: String): String = "<<$TAG_HEADER<< $tag"
 
     fun v(tag: String, msg: String) {
         if (level <= VERBOSE) {
