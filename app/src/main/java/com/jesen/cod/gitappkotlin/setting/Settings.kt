@@ -2,6 +2,7 @@ package com.jesen.cod.gitappkotlin.setting
 
 import com.jesen.cod.common.sharedpreference.Preferences
 import com.jesen.cod.gitappkotlin.AppContext
+import com.jesen.cod.gitappkotlin.utils.pref
 
 
 object Settings {
@@ -15,6 +16,9 @@ object Settings {
         "password",
         ""
     )
+
+    var themeMode by pref("themeMode", "DAY")
+
 
 }
 
