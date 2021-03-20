@@ -23,7 +23,15 @@ class AboutFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return UI {
+        return AboutFragmentUI().createView(AnkoContext.Companion.create(context!!, this))
+    }
+
+}
+
+class AboutFragmentUI : AnkoComponent<AboutFragment> {
+
+    override fun createView(ui: AnkoContext<AboutFragment>): View {
+        return ui.apply {
             nestedScrollView {
                 verticalLayout {
                     imageView {
