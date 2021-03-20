@@ -10,6 +10,7 @@ import android.view.MenuInflater
 import android.widget.CompoundButton
 import android.widget.Switch
 import com.bennyhuo.tieguanyin.annotations.ActivityBuilder
+import com.jesen.cod.common.ext.no
 import com.jesen.cod.common.ext.otherwise
 import com.jesen.cod.common.ext.yes
 import com.jesen.cod.gitappkotlin.AppContext
@@ -20,7 +21,10 @@ import com.jesen.cod.gitappkotlin.model.account.OnAccountStateChangeListener
 import com.jesen.cod.gitappkotlin.setting.Settings
 import com.jesen.cod.gitappkotlin.utils.AppLog
 import com.jesen.cod.gitappkotlin.utils.loadWithGlide
+import com.jesen.cod.gitappkotlin.utils.showFragment
+import com.jesen.cod.gitappkotlin.utils.simpleStartActivity
 import com.jesen.cod.gitappkotlin.view.config.Themer
+import com.jesen.cod.gitappkotlin.view.fragments.subfragments.AboutFragment
 import doOnLayoutAvailable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -29,7 +33,10 @@ import kotlinx.android.synthetic.main.menu_item_daynight.view.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.sdk15.listeners.onCheckedChange
+import org.jetbrains.anko.sdk15.listeners.onClick
+import org.jetbrains.anko.toast
 import java.lang.Appendable
+import kotlin.reflect.jvm.internal.impl.metadata.deserialization.Flags
 
 @ActivityBuilder(flags = [Intent.FLAG_ACTIVITY_CLEAR_TOP])
 class MainActivity : AppCompatActivity(), OnAccountStateChangeListener {
@@ -37,6 +44,7 @@ class MainActivity : AppCompatActivity(), OnAccountStateChangeListener {
     private val TAG = "MainActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Themer.applyProperTheme(this)
         setContentView(R.layout.activity_main)
         setSupportActionBar(m_toolbar)
 
@@ -48,6 +56,9 @@ class MainActivity : AppCompatActivity(), OnAccountStateChangeListener {
         toggle.syncState()
         initNavigationView()
         AccountManager.onAccountStateChangeListeners.add(this)
+
+        showFragment(R.id.fragmentContainer, AboutFragment::class.java)
+        title = "About"
     }
 
     override fun onDestroy() {
@@ -57,6 +68,7 @@ class MainActivity : AppCompatActivity(), OnAccountStateChangeListener {
 
     private fun initNavigationView() {
         AccountManager.currentUser?.let(::updateNavigationView) ?: clearNavigationView()
+        initNavigationHeaderView()
     }
 
     private fun updateNavigationView(user2: User2) {
@@ -72,6 +84,22 @@ class MainActivity : AppCompatActivity(), OnAccountStateChangeListener {
             usernameView.text = resources.getString(R.string.please_login)
             emailView.text = ""
             avatarView.imageResource = R.drawable.ic_github
+        }
+    }
+
+    private fun initNavigationHeaderView() {
+        navigationView.onClick {
+            AccountManager.isLoggedIn().no {
+                simpleStartActivity<LoginActivity>(this) {
+                    setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                }
+            }.otherwise {
+                AccountManager.logout().subscribe({
+                    toast("注销成功")
+                }, {
+                    it.printStackTrace()
+                })
+            }
         }
     }
 

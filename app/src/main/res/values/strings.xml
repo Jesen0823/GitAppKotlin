@@ -21,5 +21,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="please_login">请登录</string>
+    <string name="open_source_license">Open source license</string>
 
 </resources>
