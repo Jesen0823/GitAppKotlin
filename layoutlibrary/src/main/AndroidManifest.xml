@@ -4,10 +4,10 @@
     <application>
         <activity
             android:name=".v1.test.TestActivity"
-            android:exported="true" />
+            android:exported="false" />
 
         <activity
             android:name=".v2.test.TestActivityV2"
-            android:exported="true" />
+            android:exported="false" />
     </application>
 </manifest>

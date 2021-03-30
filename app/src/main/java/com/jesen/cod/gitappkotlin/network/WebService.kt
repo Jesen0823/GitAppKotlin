@@ -26,9 +26,10 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
 
-@Deprecated("该请求方式GitHub官方已停止使用")
+/*该请求方式GitHub官方不用来鉴权*/
 private const val BASE_URL = "https://api.github.com"
 
+/*用来鉴权*/
 private const val BASE_URL_NEW = "https://github.com/"
 
 private val cacheFile by lazy {
@@ -46,7 +47,16 @@ fun getSSLSocketFactory(): SSLSocketFactory? {
 }
 
 val retrofit by lazy {
-    Retrofit.Builder()
+    buildRetrofit(BASE_URL_NEW)
+}
+
+val retrofitOld by lazy {
+    buildRetrofit(BASE_URL)
+}
+
+
+private fun buildRetrofit(baseUrl: String): Retrofit {
+    return Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create(gson))
         //.addCallAdapterFactory(RxJavaCallAdapterFactory.create())
         .addCallAdapterFactory(
@@ -57,19 +67,18 @@ val retrofit by lazy {
         )
         .client(
             OkHttpClient.Builder()
-                .sslSocketFactory(SSLSocketFactoryCompat())
+                //.sslSocketFactory(SSLSocketFactoryCompat())
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)
                 .writeTimeout(60, TimeUnit.SECONDS)
                 .cache(Cache(cacheFile, 1024 * 1024 * 1024))
                 .addInterceptor(AcceptInterceptor())
-                .addInterceptor(AuthInterceptor2())
+                //.addInterceptor(AuthInterceptor2())
                 .addInterceptor(HeaderInterceptor())
                 .addInterceptor(HttpLoggingInterceptor().setLevel(Level.BODY))
                 .enableTls12OnPreLollipop()
                 .build()
         )
-        .baseUrl(BASE_URL_NEW)
+        .baseUrl(baseUrl)
         .build()
-
 }

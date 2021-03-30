@@ -1,47 +1,52 @@
 package com.jesen.cod.gitappkotlin.view
 
+import afterClosed
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.view.Menu
-import android.view.MenuInflater
-import android.widget.CompoundButton
 import android.widget.Switch
 import com.bennyhuo.tieguanyin.annotations.ActivityBuilder
 import com.jesen.cod.common.ext.no
 import com.jesen.cod.common.ext.otherwise
 import com.jesen.cod.common.ext.yes
-import com.jesen.cod.gitappkotlin.AppContext
 import com.jesen.cod.gitappkotlin.R
 import com.jesen.cod.gitappkotlin.entities.User2
 import com.jesen.cod.gitappkotlin.model.account.AccountManager
 import com.jesen.cod.gitappkotlin.model.account.OnAccountStateChangeListener
+import com.jesen.cod.gitappkotlin.network.service.RepositoryService
 import com.jesen.cod.gitappkotlin.setting.Settings
 import com.jesen.cod.gitappkotlin.utils.AppLog
 import com.jesen.cod.gitappkotlin.utils.loadWithGlide
 import com.jesen.cod.gitappkotlin.utils.showFragment
 import com.jesen.cod.gitappkotlin.utils.simpleStartActivity
+import com.jesen.cod.gitappkotlin.view.config.NavViewItem
 import com.jesen.cod.gitappkotlin.view.config.Themer
-import com.jesen.cod.gitappkotlin.view.fragments.subfragments.AboutFragment
+import com.jesen.cod.gitappkotlin.view.widget.ActionBarController
+import com.jesen.cod.gitappkotlin.view.widget.NavigationController
 import doOnLayoutAvailable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.menu_item_daynight.*
-import kotlinx.android.synthetic.main.menu_item_daynight.view.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.sdk15.listeners.onCheckedChange
 import org.jetbrains.anko.sdk15.listeners.onClick
 import org.jetbrains.anko.toast
-import java.lang.Appendable
-import kotlin.reflect.jvm.internal.impl.metadata.deserialization.Flags
 
 @ActivityBuilder(flags = [Intent.FLAG_ACTIVITY_CLEAR_TOP])
 class MainActivity : AppCompatActivity(), OnAccountStateChangeListener {
 
     private val TAG = "MainActivity"
+
+    val actionBarController by lazy {
+        ActionBarController(this)
+    }
+
+    private val navigationController by lazy {
+        NavigationController(navigationView, ::onNavItemChanged, ::handleNavigationHeaderClickEvent)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Themer.applyProperTheme(this)
@@ -54,11 +59,21 @@ class MainActivity : AppCompatActivity(), OnAccountStateChangeListener {
         )
         drawer_layout.setDrawerListener(toggle)
         toggle.syncState()
+
         initNavigationView()
         AccountManager.onAccountStateChangeListeners.add(this)
 
-        showFragment(R.id.fragmentContainer, AboutFragment::class.java)
-        title = "About"
+        /*showFragment(R.id.fragmentContainer, AboutFragment::class.java)
+        title = "About"*/
+
+        /* RepositoryService.listRepositoriesOfUser("enbandari",2)
+             .subscribe({
+                 AppLog.d(TAG,"hasNext : ${it.hasNext}")
+                 AppLog.d(TAG,"hasPrev : ${it.hasPrev}")
+
+             },{
+
+             })*/
     }
 
     override fun onDestroy() {
@@ -67,8 +82,14 @@ class MainActivity : AppCompatActivity(), OnAccountStateChangeListener {
     }
 
     private fun initNavigationView() {
-        AccountManager.currentUser?.let(::updateNavigationView) ?: clearNavigationView()
-        initNavigationHeaderView()
+        AccountManager.isLoggedIn()
+            .yes {
+                navigationController.useLoginLayout()
+            }
+            .otherwise {
+                navigationController.useNoLoginLayout()
+            }
+        navigationController.selectProperItem()
     }
 
     private fun updateNavigationView(user2: User2) {
@@ -89,17 +110,18 @@ class MainActivity : AppCompatActivity(), OnAccountStateChangeListener {
 
     private fun initNavigationHeaderView() {
         navigationView.onClick {
-            AccountManager.isLoggedIn().no {
+            AppLog.d(TAG, "on click")
+            //AccountManager.isLoggedIn().no {
                 simpleStartActivity<LoginActivity>(this) {
                     setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
                 }
-            }.otherwise {
+            /*}.otherwise {
                 AccountManager.logout().subscribe({
                     toast("注销成功")
                 }, {
                     it.printStackTrace()
                 })
-            }
+            }*/
         }
     }
 
@@ -138,5 +160,30 @@ class MainActivity : AppCompatActivity(), OnAccountStateChangeListener {
         }
 
         return true
+    }
+
+    private fun onNavItemChanged(navViewItem: NavViewItem) {
+        drawer_layout.afterClosed {
+            showFragment(R.id.fragmentContainer, navViewItem.fragmentClass, navViewItem.arguments)
+            title = navViewItem.title
+        }
+    }
+
+    private fun handleNavigationHeaderClickEvent() {
+        AccountManager.isLoggedIn().no {
+            startLoginActivity()
+        }.otherwise {
+            AccountManager.logout().subscribe({
+                toast("注销成功")
+            }, {
+                it.printStackTrace()
+            })
+        }
+    }
+
+    private fun startLoginActivity() {
+        simpleStartActivity<LoginActivity>(this) {
+            setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+        }
     }
 }

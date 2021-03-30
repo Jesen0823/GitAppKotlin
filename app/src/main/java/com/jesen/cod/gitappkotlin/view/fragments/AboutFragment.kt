@@ -1,4 +1,4 @@
-package com.jesen.cod.gitappkotlin.view.fragments.subfragments
+package com.jesen.cod.gitappkotlin.view.fragments
 
 /**
  * 关于页面，采用Anko Dsl布局
@@ -9,22 +9,22 @@ import android.support.v4.app.Fragment
 import android.view.*
 import cn.carbs.android.avatarimageview.library.AvatarImageView
 import com.jesen.cod.gitappkotlin.R
-import com.jesen.cod.gitappkotlin.utils.loadWithGlide
 import com.jesen.cod.gitappkotlin.utils.markdownText
+import com.jesen.cod.gitappkotlin.view.common.CommonSinglePageFragment
 import org.jetbrains.anko.*
 import org.jetbrains.anko.custom.ankoView
 import org.jetbrains.anko.sdk15.listeners.onClick
-import org.jetbrains.anko.support.v4.UI
 import org.jetbrains.anko.support.v4.nestedScrollView
 
-class AboutFragment : Fragment() {
+class AboutFragment : CommonSinglePageFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return AboutFragmentUI().createView(AnkoContext.Companion.create(context!!, this))
+        return AboutFragmentUI()
+            .createView(AnkoContext.Companion.create(context!!, this))
     }
 
 }
