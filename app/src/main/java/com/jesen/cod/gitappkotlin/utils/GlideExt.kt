@@ -1,10 +1,10 @@
 package com.jesen.cod.gitappkotlin.utils
 
-import cn.carbs.android.avatarimageview.library.AvatarImageView
+import cn.carbs.android.avatarimageview.library.AppCompatAvatarImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
-fun AvatarImageView.loadWithGlide(
+fun AppCompatAvatarImageView.loadWithGlide(
     url: String, textPlaceHolder: Char, requestOptions: RequestOptions =
         RequestOptions()
 ) {

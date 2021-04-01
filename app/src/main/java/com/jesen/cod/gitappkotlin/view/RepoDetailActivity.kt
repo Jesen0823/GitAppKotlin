@@ -12,6 +12,7 @@ import com.jesen.cod.gitappkotlin.entities.Repository
 import com.jesen.cod.gitappkotlin.network.service.ActivityService
 import com.jesen.cod.gitappkotlin.network.service.RepositoryService
 import com.jesen.cod.gitappkotlin.utils.*
+import com.jesen.cod.gitappkotlin.view.common.BaseDetailActivity
 import com.jesen.cod.gitappkotlin.view.common.BaseDetailSwipeFinishableActivity
 import com.jesen.cod.gitappkotlin.view.config.Themer
 import kotlinx.android.synthetic.main.activity_repo_detail.*
@@ -20,7 +21,7 @@ import retrofit2.Response
 import rx.Subscriber
 
 @ActivityBuilder
-class RepoDetailActivity : BaseDetailSwipeFinishableActivity() {
+class RepoDetailActivity : BaseDetailActivity() {
 
     @Required
     lateinit var repository: Repository

@@ -7,7 +7,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
-import cn.carbs.android.avatarimageview.library.AvatarImageView
+import cn.carbs.android.avatarimageview.library.AppCompatAvatarImageView
 import com.jesen.cod.gitappkotlin.R
 import com.jesen.cod.gitappkotlin.utils.attrStyle
 import com.jesen.cod.gitappkotlin.utils.markdownText
@@ -98,8 +98,8 @@ class AboutFragmentUI : AnkoComponent<AboutFragment> {
  * Copy from:package org.jetbrains.anko
  * 修改返回类型和参数
  * */
-inline fun ViewManager.avatarImageView(): AvatarImageView = avatarImageView() {}
+inline fun ViewManager.avatarImageView(): AppCompatAvatarImageView = avatarImageView() {}
 
-inline fun ViewManager.avatarImageView(init: (@AnkoViewDslMarker AvatarImageView).() -> Unit): AvatarImageView {
-    return ankoView({ ctx: Context -> AvatarImageView(ctx) }, theme = 0) { init() }
+inline fun ViewManager.avatarImageView(init: (@AnkoViewDslMarker AppCompatAvatarImageView).() -> Unit): AppCompatAvatarImageView {
+    return ankoView({ ctx: Context -> AppCompatAvatarImageView(ctx) }, theme = 0) { init() }
 }

@@ -12,7 +12,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <cn.carbs.android.avatarimageview.library.AvatarImageView
+    <cn.carbs.android.avatarimageview.library.AppCompatAvatarImageView
         android:id="@+id/avatarView"
         android:layout_width="50dp"
         android:layout_height="50dp"

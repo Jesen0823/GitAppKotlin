@@ -6,7 +6,7 @@ import android.widget.TextView
 import com.zzhoujay.richtext.RichText
 import org.jetbrains.anko.AnkoViewDslMarker
 import org.jetbrains.anko.custom.ankoView
-import cn.carbs.android.avatarimageview.library.AvatarImageView
+import cn.carbs.android.avatarimageview.library.AppCompatAvatarImageView
 
 
 var TextView.markdownText: String
@@ -21,12 +21,12 @@ var TextView.htmlText: String
     }
     get() = text.toString()
 
-inline fun ViewManager.avatarImageView(): AvatarImageView = avatarImageView() {}
+inline fun ViewManager.avatarImageView(): AppCompatAvatarImageView = avatarImageView() {}
 
 inline fun ViewManager.avatarImageView(
-    init: (@AnkoViewDslMarker AvatarImageView).() -> Unit
-): AvatarImageView {
-    return ankoView({ ctx: Context -> AvatarImageView(ctx) }, theme = 0) {
+    init: (@AnkoViewDslMarker AppCompatAvatarImageView).() -> Unit
+): AppCompatAvatarImageView {
+    return ankoView({ ctx: Context -> AppCompatAvatarImageView(ctx) }, theme = 0) {
         init()
     }
 }

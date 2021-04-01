@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:transitionName="userHead">
 
-    <cn.carbs.android.avatarimageview.library.AvatarImageView
+    <cn.carbs.android.avatarimageview.library.AppCompatAvatarImageView
         android:id="@+id/avatarView"
         style="@style/list_item_avatar"
         android:layout_centerVertical="true"
