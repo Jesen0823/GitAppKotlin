@@ -123,6 +123,8 @@ dependencies {
     api "com.apollographql.apollo:apollo-rx-support:$apollo_version"
     api "com.apollographql.apollo:apollo-runtime:$apollo_version"
 
+    api 'com.githang:status-bar-compat:0.7'
+
 
     implementation project(":common")
     implementation project(":mvp")

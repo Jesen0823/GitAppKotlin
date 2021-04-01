@@ -2,6 +2,7 @@ package com.jesen.cod.gitappkotlin.view.config
 
 import android.app.Activity
 import android.support.annotation.StyleRes
+import com.githang.statusbar.StatusBarCompat
 import com.jesen.cod.gitappkotlin.R
 import com.jesen.cod.gitappkotlin.setting.Settings
 
@@ -20,6 +21,14 @@ object Themer {
         activity.setTheme(currentTheme().let {
             if (translucent) it.translucent else it.normal
         })
+        var originalColor = R.color.colorPrimary
+        if (currentTheme().equals(ThemeMode.NIGHT)) {
+            originalColor = R.color.colorPrimaryInverse
+        }
+        StatusBarCompat.setStatusBarColor(
+            activity, activity.resources.getColor(originalColor),
+            false
+        );
     }
 
     fun toggle(activity: Activity) {
