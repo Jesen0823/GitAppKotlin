@@ -100,6 +100,7 @@ class RepoDetailActivity : BaseDetailActivity() {
                     stars.content = repository.stargazers_count.toString()
                     watches.content = repository.watchers_count.toString()
                     forks.content = repository.forks_count.toString()
+                    issues.content = repository.open_issues_count.toString()
 
                     loadingView.animate().alpha(0f).start()
                     detailContainer.animate().alpha(1f).start()
