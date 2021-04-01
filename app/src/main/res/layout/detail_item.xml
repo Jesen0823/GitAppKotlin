@@ -2,6 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardContainer"
+    app:cardBackgroundColor="?attr/itemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="5dp"
@@ -49,8 +50,3 @@
         app:backgroundTint="?android:textColorSecondaryInverse"
         android:background="@drawable/sel_star" />
 </android.support.v7.widget.CardView>
-
-
-
-
-

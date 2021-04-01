@@ -22,5 +22,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="please_login">请登录</string>
     <string name="open_source_license">Open source license</string>
+    <string name="repo_description_template">[%1$s](%2$s)/[%3$s](%4$s) \n\n Created by [%5$s](%6$s) on %7$s</string>
 
 </resources>

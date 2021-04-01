@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#c7ffec</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorPrimary">#4286F5</color>
+    <color name="colorPrimaryDark">#2D6EEE</color>
+    <color name="colorAccent">#FF5282</color>
 
     <!-- add -->
-    <color name="textColorPrimaryInverse">#24292E</color>
+    <color name="textColorPrimaryInverse">#DE000000</color>
     <color name="textColorSecondaryInverse">#333333</color>
     <color name="textColorTertiaryInverse">#555555</color>
 
     <color name="textColorPrimary">#FFFFFF</color>
-    <color name="textColorSecondary">#F0F0F0</color>
+    <color name="textColorSecondary">#9E9E9E</color>
     <color name="textColorTertiary">#AAAAAA</color>
 
     <color name="colorBackground">#F3F3F3</color>
@@ -23,4 +23,12 @@
     <color name="google_yellow">#fabc05</color>
     <color name="google_green">#34a853</color>
     <color name="google_blue">#4286f5</color>
+
+    <color name="selectableItemBackground">#FFFFEF</color>
+    <color name="selectableItemBackgroundInverse">#676767</color>
+    <color name="item_back_color">#FFFFEF</color>
+    <color name="item_back_color_night">#3E3E3E</color>
+
+    <color name="itemTextAppearance">#FF0000</color>
+
 </resources>

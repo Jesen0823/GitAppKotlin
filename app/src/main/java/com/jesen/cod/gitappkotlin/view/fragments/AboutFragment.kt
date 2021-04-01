@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment
 import android.view.*
 import cn.carbs.android.avatarimageview.library.AvatarImageView
 import com.jesen.cod.gitappkotlin.R
+import com.jesen.cod.gitappkotlin.utils.attrStyle
 import com.jesen.cod.gitappkotlin.utils.markdownText
 import com.jesen.cod.gitappkotlin.view.common.CommonSinglePageFragment
 import org.jetbrains.anko.*
@@ -51,7 +52,7 @@ class AboutFragmentUI : AnkoComponent<AboutFragment> {
 
                     // 使用主题
                     themedTextView("GitHub", R.style.detail_title) {
-                        textColor = R.color.colorPrimary
+                        textColor = attrStyle(R.attr.colorPrimary)
                         padding = dip(10)
                     }.lparams(width = wrapContent, height = wrapContent) {
                         gravity = Gravity.CENTER_HORIZONTAL

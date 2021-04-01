@@ -14,13 +14,17 @@
         <item name="android:textColorSecondaryInverse">@color/textColorSecondaryInverse</item>
         <item name="android:textColorTertiaryInverse">@color/textColorTertiaryInverse</item>
 
+        <!--<item name="android:selectableItemBackground">@color/selectableItemBackground</item>-->
+
         <item name="android:colorBackground">@color/colorBackground</item>
         <item name="android:windowBackground">@color/windowBackground</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
+        <!--<item name="android:actionMenuTextColor">@color/colorPrimaryDark</item>-->
         <item name="sideBarBackground">@drawable/side_nav_bar</item>
+        <item name="navigationBackground">@drawable/navigation_background</item>
+        <item name="itemBackground">@color/item_back_color</item>
         <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
     </style>
 
@@ -40,10 +44,16 @@
         <item name="android:colorBackground">@color/colorBackgroundInverse</item>
         <item name="android:windowBackground">@color/windowBackgroundInverse</item>
 
+        <!--<item name="android:selectableItemBackground">@color/selectableItemBackgroundInverse</item>-->
+
+
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+        <!--<item name="android:actionMenuTextColor">@color/colorPrimaryDark</item>-->
 
         <item name="sideBarBackground">@drawable/side_nav_bar_night</item>
+        <item name="navigationBackground">@drawable/navigation_background_night</item>
+        <item name="itemBackground">@color/item_back_color_night</item>
         <item name="android:alertDialogTheme">@style/AlertDialogTheme.Dark</item>
     </style>
 

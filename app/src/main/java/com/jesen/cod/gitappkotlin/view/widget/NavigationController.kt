@@ -1,6 +1,11 @@
 package com.jesen.cod.gitappkotlin.view.widget
 
+import android.content.res.ColorStateList
+import android.content.res.Resources
+import android.graphics.drawable.ColorDrawable
 import android.support.design.widget.NavigationView
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.view.MenuItem
 import com.jesen.cod.common.log.logger
 import com.jesen.cod.gitappkotlin.R
@@ -11,6 +16,7 @@ import com.jesen.cod.gitappkotlin.utils.loadWithGlide
 import com.jesen.cod.gitappkotlin.view.config.NavViewItem
 import doOnLayoutAvailable
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import org.jetbrains.anko.Android
 import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.sdk15.listeners.onClick
 import selectItem

@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @PoKo
 @Parcelize
-data class Repository(
+data class RepositoryOld(
     var id: Int,
     var name: String,
     var full_name: String,

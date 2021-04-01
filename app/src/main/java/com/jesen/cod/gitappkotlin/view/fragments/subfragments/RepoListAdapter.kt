@@ -5,8 +5,11 @@ import android.view.View
 import com.jesen.cod.gitappkotlin.R
 import com.jesen.cod.gitappkotlin.entities.Repository
 import com.jesen.cod.gitappkotlin.utils.loadWithGlide
+import com.jesen.cod.gitappkotlin.utils.simpleStartActivity
 import com.jesen.cod.gitappkotlin.utils.toKilo
+import com.jesen.cod.gitappkotlin.view.RepoDetailActivity
 import com.jesen.cod.gitappkotlin.view.common.CommonListAdapter
+import com.jesen.cod.gitappkotlin.view.startRepoDetailActivity
 import kotlinx.android.synthetic.main.item_repo.view.*
 
 class RepoListAdapter : CommonListAdapter<Repository>(R.layout.item_repo) {
@@ -23,7 +26,10 @@ class RepoListAdapter : CommonListAdapter<Repository>(R.layout.item_repo) {
     }
 
     override fun onItemClicked(itemView: View, item: Repository) {
-        //itemView.startRepoDetailActivity(item)
+        itemView.startRepoDetailActivity(item)
+        /*simpleStartActivity<RepoDetailActivity>(itemView.context){
+            putExtra("repository", item)
+        }*/
     }
 
 

@@ -2,9 +2,12 @@ package com.jesen.cod.gitappkotlin.view.common
 
 import android.view.View
 import com.jesen.cod.gitappkotlin.model.page.ListPage
+import com.jesen.cod.gitappkotlin.utils.AppLog
 import com.jesen.cod.mvp.impl.BaseFragment
 import com.jesen.cod.mvp.impl.BasePresenter
 import rx.Subscription
+
+private const val TAG = "CommonListPresenter"
 
 abstract class CommonListPresenter<DataType, out View : CommonListFragment<DataType,
         CommonListPresenter<DataType, View>>> : BasePresenter<View>() {
@@ -17,8 +20,10 @@ abstract class CommonListPresenter<DataType, out View : CommonListFragment<DataT
     fun initData() {
         listPage.loadFromFirst()
             .subscribe({
+                //AppLog.i(TAG,"initData it:${it.toString()}")
                 if (it.isEmpty()) view.onDataInitWithNothing() else view.onDataInit(it)
             }, {
+                AppLog.i(TAG, "initData error:${it.toString()} \n ${it.printStackTrace()}")
                 view.onDataInitWithError(it.message ?: it.toString())
             }).let(subscriptionList::add)
     }

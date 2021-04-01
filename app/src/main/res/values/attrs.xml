@@ -14,5 +14,7 @@
         <attr name="originalTop" format="dimension" />
     </declare-styleable>
 
+    <attr name="navigationBackground" format="reference" />
     <attr name="sideBarBackground" format="reference" />
+    <attr name="itemBackground" format="reference" />
 </resources>

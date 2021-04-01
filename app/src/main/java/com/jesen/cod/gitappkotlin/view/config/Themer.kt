@@ -15,6 +15,7 @@ object Themer {
 
     fun currentTheme() = ThemeMode.valueOf(Settings.themeMode)
 
+    /*选择主题*/
     fun applyProperTheme(activity: Activity, translucent: Boolean = false) {
         activity.setTheme(currentTheme().let {
             if (translucent) it.translucent else it.normal

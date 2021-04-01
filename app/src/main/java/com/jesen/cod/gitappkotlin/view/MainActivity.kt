@@ -147,7 +147,8 @@ class MainActivity : AppCompatActivity(), OnAccountStateChangeListener {
         var switchView = view.findViewById<Switch>(R.id.dayNightSwitch)
         switchView.apply {
 
-            isChecked = Settings.themeMode == Themer.ThemeMode.NIGHT.name
+            // isChecked = Settings.themeMode == Themer.ThemeMode.NIGHT.name
+            isChecked = Themer.currentTheme() == Themer.ThemeMode.DAY
             setSwitchTextAppearance(this@MainActivity, R.style.s_day)
             setOnCheckedChangeListener { buttonView, isChecked ->
                 if (isChecked) {

@@ -20,6 +20,7 @@ import com.jesen.cod.gitappkotlin.R
 import com.jesen.cod.gitappkotlin.model.account.AccountManager
 import com.jesen.cod.gitappkotlin.presenter.LoginPresenter
 import com.jesen.cod.gitappkotlin.utils.*
+import com.jesen.cod.gitappkotlin.view.config.Themer
 import com.jesen.cod.mvp.impl.BaseActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.toast
@@ -39,6 +40,7 @@ class LoginActivity : BaseActivity<LoginPresenter>(), AlertDialogListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Themer.applyProperTheme(this)
         setContentView(R.layout.activity_login)
 
         signInButton.setOnClickListener {

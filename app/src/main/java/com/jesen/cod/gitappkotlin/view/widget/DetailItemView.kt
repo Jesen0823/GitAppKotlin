@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.bennyhuo.kotlin.opd.delegateOf
 import com.jesen.cod.gitappkotlin.R
 import com.jesen.cod.gitappkotlin.utils.subscribeIgnoreError
@@ -22,7 +23,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         View.inflate(context, R.layout.detail_item, this)
     }
 
-    var title by delegateOf(titleView::getText, titleView::setText)
+    var title by ObjectPropertyDelegate(titleView, TextView::getText, TextView::setText, "")
 
     var content by delegateOf(contentView::getText, contentView::setText, "")
 
@@ -53,6 +54,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
 }
 
+/***
+ * 属性代理类
+ * */
 class ObjectPropertyDelegate<T, R>(
     val receiver: R,
     val getter: ((R) -> T)? = null,

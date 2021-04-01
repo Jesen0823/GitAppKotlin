@@ -2,6 +2,7 @@ package com.jesen.cod.gitappkotlin
 
 import android.app.Application
 import android.content.ContextWrapper
+import com.bennyhuo.swipefinishable.SwipeFinishable
 import com.bennyhuo.tieguanyin.runtime.core.ActivityBuilder
 import com.jesen.cod.common.log.logger
 
@@ -12,6 +13,8 @@ class GitApp: Application() {
         super.onCreate()
         INSTANCE = this
         ActivityBuilder.INSTANCE.init(this)
+        SwipeFinishable.INSTANCE.init(this)
+
         logger.isInfoEnabled
     }
 

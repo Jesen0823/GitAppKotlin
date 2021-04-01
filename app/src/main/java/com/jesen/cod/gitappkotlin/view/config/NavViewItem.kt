@@ -47,7 +47,7 @@ class NavViewItem private constructor(
 
     override fun toString(): String {
         return "NavViewItem(groupId=$groupId, title='$title', icon=$icon, " +
-                "fragmentClass=$fragmentClass, arguements=$arguments)"
+                "fragmentClass=$fragmentClass, arguments=$arguments)"
     }
 
 }

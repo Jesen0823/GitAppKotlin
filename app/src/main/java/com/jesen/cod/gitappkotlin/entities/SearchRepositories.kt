@@ -2,7 +2,7 @@ package com.jesen.cod.gitappkotlin.entities
 
 import retrofit2.adapter.rxjava.PagingWrapper
 
-data class SearchRepositories(
+data class SearchRepositoriesOld(
     var total_count: Int,
     var incomplete_results: Boolean,
     var items: List<Repository>

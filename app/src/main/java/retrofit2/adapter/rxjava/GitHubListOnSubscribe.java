@@ -53,15 +53,15 @@ final class GitHubListOnSubscribe<GitHubPagingBody> implements OnSubscribe<GitHu
         public void onNext(Response<GitHubPagingBody> response) {
             if (response.isSuccessful()) {
                 GitHubPaging<?> paging;
-                if (response.body() instanceof GitHubPaging) {
+                if (response.body() instanceof GitHubPaging){
                     paging = (GitHubPaging<?>) response.body();
-                } else if (response.body() instanceof PagingWrapper) {
+                } else if (response.body() instanceof PagingWrapper){
                     paging = ((PagingWrapper) response.body()).getPaging();
                 } else {
                     throw new IllegalArgumentException("response.body type error: " + response.body().getClass());
                 }
                 String link = response.headers().get("link");
-                if (link != null) {
+                if(link != null){
                     paging.setupLinks(link);
                 }
                 subscriber.onNext(response.body());
