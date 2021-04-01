@@ -7,6 +7,9 @@ import android.util.AttributeSet
 import android.view.View
 import com.jesen.cod.gitappkotlin.R
 
+/**
+ * 头像与ActionBar联动
+ * */
 class AppBarLayoutBehavior(context: Context, attrs: AttributeSet?) :
     CoordinatorLayout.Behavior<View>() {
     companion object {

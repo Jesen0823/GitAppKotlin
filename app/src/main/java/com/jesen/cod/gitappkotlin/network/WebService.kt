@@ -4,10 +4,7 @@ import com.google.gson.GsonBuilder
 import com.jesen.cod.common.ext.ensureDir
 import com.jesen.cod.gitappkotlin.AppContext
 import com.jesen.cod.gitappkotlin.network.compat.enableTls12OnPreLollipop
-import com.jesen.cod.gitappkotlin.network.interceptors.AcceptInterceptor
-import com.jesen.cod.gitappkotlin.network.interceptors.AuthInterceptor
-import com.jesen.cod.gitappkotlin.network.interceptors.AuthInterceptor2
-import com.jesen.cod.gitappkotlin.network.interceptors.HeaderInterceptor
+import com.jesen.cod.gitappkotlin.network.interceptors.*
 import com.jesen.cod.gitappkotlin.network.service.SSLSocketFactoryCompat
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -25,6 +22,10 @@ import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
+
+//通过一个 QueryParameter 让 CacheInterceptor 添加 no-cache
+const val FORCE_NETWORK = "forceNetwork"
+
 
 /*该请求方式GitHub官方不用来鉴权*/
 private const val BASE_URL = "https://api.github.com"
@@ -74,6 +75,7 @@ private fun buildRetrofit(baseUrl: String): Retrofit {
                 .cache(Cache(cacheFile, 1024 * 1024 * 1024))
                 .addInterceptor(AcceptInterceptor())
                 //.addInterceptor(AuthInterceptor2())
+                .addInterceptor(CacheInterceptor())
                 .addInterceptor(HeaderInterceptor())
                 .addInterceptor(HttpLoggingInterceptor().setLevel(Level.BODY))
                 .enableTls12OnPreLollipop()

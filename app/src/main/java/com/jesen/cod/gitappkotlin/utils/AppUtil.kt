@@ -1,10 +1,15 @@
 package com.jesen.cod.gitappkotlin.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.os.Build
+import android.view.Window
+import android.view.WindowManager
 
 //跟App相关的辅助类
 object AppUtil {
@@ -107,7 +112,7 @@ object AppUtil {
         try {
             packageManager = context.applicationContext
                 .packageManager
-            applicationInfo = packageManager.getApplicationInfo(
+            applicationInfo = packageManager?.getApplicationInfo(
                 context.packageName, 0
             )
         } catch (e: PackageManager.NameNotFoundException) {
