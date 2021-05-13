@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity(), OnAccountStateChangeListener {
 
     private fun startLoginActivity() {
         simpleStartActivity<LoginActivity>(this) {
-            setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            //setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
         }
     }
 }

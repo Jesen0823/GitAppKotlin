@@ -101,6 +101,4 @@ abstract class BaseActivity<out P : BasePresenter<BaseActivity<P>>> : AppCompatA
         super.onPause()
         presenter.onPause()
     }
-
-
 }

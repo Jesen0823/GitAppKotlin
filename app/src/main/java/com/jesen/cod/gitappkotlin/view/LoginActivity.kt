@@ -23,6 +23,8 @@ import com.jesen.cod.gitappkotlin.utils.*
 import com.jesen.cod.gitappkotlin.view.config.Themer
 import com.jesen.cod.mvp.impl.BaseActivity
 import kotlinx.android.synthetic.main.activity_login.*
+import leakcanary.AppWatcher
+import leakcanary.LeakCanary
 import org.jetbrains.anko.toast
 
 private const val TAG = "LoginActivity"
@@ -42,6 +44,7 @@ class LoginActivity : BaseActivity<LoginPresenter>(), AlertDialogListener {
         super.onCreate(savedInstanceState)
         Themer.applyProperTheme(this)
         setContentView(R.layout.activity_login)
+
 
         signInButton.setOnClickListener {
             AppLog.i(TAG, "click login")
@@ -189,5 +192,10 @@ class LoginActivity : BaseActivity<LoginPresenter>(), AlertDialogListener {
 
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        dialogUtil.dismissDialog()
     }
 }

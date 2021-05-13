@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.apollographql.android'
+apply plugin: 'com.apollographql.apollo'
 apply plugin: 'kotlin-android'
 //KAE
 apply plugin: 'kotlin-android-extensions'
@@ -21,13 +21,18 @@ noArg {
     annotations "com.jesen.cod.common.anno.PoKo"
 }
 
+apollo {
+    // instruct the compiler to generate Kotlin models
+    generateKotlinModels.set(true)
+}
+
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "com.jesen.cod.gitappkotlin"
-        minSdkVersion 16
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -51,8 +56,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
 }
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -120,11 +125,13 @@ dependencies {
     //https://github.com/enbandari/ObjectPropertyDelegate
     api "com.bennyhuo.kotlin:opd:1.0-rc-2"
 
-    api "com.apollographql.apollo:apollo-rx-support:$apollo_version"
+    // 支持 GraphiQL : https://github.com/skevy/graphiql-app/releases
+    api "com.apollographql.apollo:apollo-rx2-support:$apollo_version"
     api "com.apollographql.apollo:apollo-runtime:$apollo_version"
 
     api 'com.githang:status-bar-compat:0.7'
 
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
     implementation project(":common")
     implementation project(":mvp")

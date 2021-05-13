@@ -11,6 +11,7 @@ import com.jesen.cod.gitappkotlin.R
 import com.jesen.cod.gitappkotlin.entities.Repository
 import com.jesen.cod.gitappkotlin.network.service.ActivityService
 import com.jesen.cod.gitappkotlin.network.service.RepositoryService
+import com.jesen.cod.gitappkotlin.network.service.apolloClient
 import com.jesen.cod.gitappkotlin.utils.*
 import com.jesen.cod.gitappkotlin.view.common.BaseDetailActivity
 import com.jesen.cod.gitappkotlin.view.common.BaseDetailSwipeFinishableActivity
@@ -100,6 +101,7 @@ class RepoDetailActivity : BaseDetailActivity() {
                     stars.content = repository.stargazers_count.toString()
                     watches.content = repository.watchers_count.toString()
                     forks.content = repository.forks_count.toString()
+                    //issues.content = repository.open_issues_count.toString()
 
                     loadingView.animate().alpha(0f).start()
                     detailContainer.animate().alpha(1f).start()
@@ -112,5 +114,6 @@ class RepoDetailActivity : BaseDetailActivity() {
                     e?.printStackTrace()
                 }
             })
+        //apolloClient.query(Repository())
     }
 }

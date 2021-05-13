@@ -158,4 +158,8 @@ class DialogU(clickListener: AlertDialogListener) {
             Toast.makeText(context, element.neutral, Toast.LENGTH_SHORT).show()
         }
     }
+
+    fun dismissDialog() {
+        dialog?.dismiss()
+    }
 }
