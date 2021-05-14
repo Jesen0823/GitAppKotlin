@@ -131,6 +131,8 @@ dependencies {
 
     api 'com.githang:status-bar-compat:0.7'
 
+    implementation "com.airbnb.android:lottie:$lottie_version"
+
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
     implementation project(":common")
